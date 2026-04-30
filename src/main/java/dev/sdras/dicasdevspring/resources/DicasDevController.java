@@ -1,12 +1,16 @@
 package dev.sdras.dicasdevspring.resources;
 
 import dev.sdras.dicasdevspring.domain.DicasDevEntity;
+import dev.sdras.dicasdevspring.repositories.DicasdevRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -14,9 +18,21 @@ import java.util.Random;
 @RequestMapping("/dicasdev")
 public class DicasDevController {
 
-    @PostMapping("/criar")
-    public ResponseEntity<DicasDevEntity> criar(@RequestBody DicasDevEntity dicasDevEntity) {
-        return ResponseEntity.ok().body(dicasDevEntity);
+    final DicasdevRepository repository;
+
+    public DicasDevController(DicasdevRepository repository) {
+        this.repository = repository;
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> criar(@RequestBody DicasDevEntity dicasDevEntity) {
+        DicasDevEntity entity = repository.save(dicasDevEntity);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(entity.getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("/excluir/{id}")
@@ -27,13 +43,12 @@ public class DicasDevController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DicasDevEntity> get(@PathVariable Integer id) {
-        var dicasDevEntity = new DicasDevEntity();
-        dicasDevEntity.setId(id);
-        dicasDevEntity.setId(new Random().nextInt(100));
-        dicasDevEntity.setDescricao("Mussum ipsum cacildis vidis litrus abertis.");
-        dicasDevEntity.setTitulo("Mussum Ipsum");
-
-        return ResponseEntity.ok().body(dicasDevEntity);
+        Optional<DicasDevEntity> entity = repository.findById(id);
+        if (entity.isPresent()) {
+            return ResponseEntity.ok(entity.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
