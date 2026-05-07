@@ -3,7 +3,7 @@ package dev.sdras.dicasdevspring.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity(name = "dicasdev")
+@Entity(name = "dicas")
 @Data
 public class DicasDevEntity {
     @Id
