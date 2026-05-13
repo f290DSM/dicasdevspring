@@ -4,6 +4,8 @@ import dev.sdras.dicasdevspring.domain.CategoriaEntity;
 import dev.sdras.dicasdevspring.dto.CategoriaDTO;
 import dev.sdras.dicasdevspring.repositories.CategoriaRepository;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,8 +20,11 @@ public class CategoriaResource {
 
     private final CategoriaRepository repository;
 
-    public CategoriaResource(CategoriaRepository repository) {
+    private final ModelMapper modelMapper;
+
+    public CategoriaResource(CategoriaRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
