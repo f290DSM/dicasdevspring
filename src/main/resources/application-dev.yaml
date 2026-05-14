@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: dicasdevspring
+  datasource:
+    url: jdbc:mysql://localhost:3306/fatec?useSSL=false&serverTimezone=UTC
+    username: aluno
+    password: aluno@fatec
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8001
